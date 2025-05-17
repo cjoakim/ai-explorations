@@ -19,6 +19,7 @@
 **/lib64/
 **/man/
 **/node_modules/
+**/obj/
 **/out/
 **/tmp/
 **/Scripts/
