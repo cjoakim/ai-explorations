@@ -10,5 +10,6 @@ dotnet add package Microsoft.SemanticKernel
 dotnet add package Microsoft.Azure.Cosmos
 dotnet add package Azure.Storage.Blobs
 dotnet add package Newtonsoft.Json
+dotnet add package DotNetEnv
 
 dotnet list package
