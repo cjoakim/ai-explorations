@@ -9,6 +9,7 @@ using DotNetEnv;
 using JoakimSoftware;
 //using JoakimSoftware.Core;
 using JoakimSoftware.IO;
+using Microsoft.SemanticKernel.Plugins.Core;
 
 namespace JoakimSoftware {
 
@@ -32,6 +33,9 @@ namespace JoakimSoftware {
                     break;
                 case "sk_simple_prompt":
                     await SKSimplePrompt();
+                    break;
+                case "sk_simple_plugins":
+                    await SKSimplePlugins();
                     break;
                 default:
                     Log("Undefined function given on command-line; " + func);
@@ -78,6 +82,7 @@ namespace JoakimSoftware {
             Log("norm: " + Paths.Normalize(@"Program.cs"));
         }
 
+
         private static async Task<string> SKSimplePrompt()
         {
             string apiUrl = ReadEnvVar("AZURE_OPENAI_URL", "none");
@@ -112,6 +117,39 @@ namespace JoakimSoftware {
             else {
                 Console.WriteLine("no prompt given");
             }
+            return resultText;
+        }
+        
+        private static async Task<string> SKSimplePlugins()
+        {
+            string apiUrl = ReadEnvVar("AZURE_OPENAI_URL", "none");
+            string apiKey = ReadEnvVar("AZURE_OPENAI_KEY", "none");
+            string depName = ReadEnvVar("AZURE_OPENAI_COMPLETIONS_DEPLOYMENT", "gpt-3.5-turbo");
+            string cat = ReadEnvVar("CAT", "Betty");
+            string resultText = "none";
+            Console.WriteLine("apiUrl:  " + apiUrl);
+            Console.WriteLine("apiKey:  " + apiKey);
+            Console.WriteLine("depName: " + depName);
+            Console.WriteLine("cat:     " + cat);
+            
+            IKernelBuilder builder = Kernel.CreateBuilder();
+            builder.AddAzureOpenAIChatCompletion(
+                deploymentName: depName,
+                apiKey: apiKey,
+                endpoint: apiUrl
+            );
+            builder.Plugins.AddFromType<TimePlugin>();
+            Console.WriteLine("builder: " + builder);
+            
+            Kernel kernel = builder.Build();
+            Console.WriteLine("kernel: " + kernel);
+            
+            // See docs at https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.plugins.core.timeplugin
+            var today = await kernel.InvokeAsync("TimePlugin", "DayOfWeek");
+            Console.WriteLine("today: " + today);
+            
+
+
             return resultText;
         }
 
