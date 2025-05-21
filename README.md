@@ -55,6 +55,7 @@ Projects and files in this repo:
 - [Azure OpenAI Models](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)
 - [Azure AI Foundry](https://azure.microsoft.com/en-us/products/ai-foundry)
 - [Azure AI Foundry Model Fine-Tuning](pythonx/docs/azure_ai_foundry_model_fine_tuning.md)
+- [Azure AI Foundry Local](https://devblogs.microsoft.com/foundry/unlock-instant-on-device-ai-with-foundry-local/)
 - [Azure AI Search](https://azure.microsoft.com/en-us/products/ai-services/ai-search)
 - [Azure AI Document Intelligence](https://azure.microsoft.com/en-us/products/ai-services/ai-document-intelligence)
 - [Prompt engineering techniques](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/prompt-engineering)
@@ -125,4 +126,4 @@ Projects and files in this repo:
 - [cjoakim.github.io - JoakimSoftware](https://cjoakim.github.io)
 - [PyPi Packages](https://pypi.org/user/cjoakim/)
 - [NPM Libraries](https://www.npmjs.com/~cjoakim)
-
+- [skhelper](https://www.npmjs.com/package/skhelper)
