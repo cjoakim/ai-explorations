@@ -1,16 +1,19 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Resources;
 
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Plugins.Core;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 
 using DotNetEnv;
-using Joakimsoftware.M26;         // This is a NuGet Package
-using Joakimsoftware.Plugins;  // This is in this codebase
-
+using Fluid.Ast;
+using Joakimsoftware.M26;      // This is a NuGet Package
+using Joakimsoftware.Plugins;  // These three are in this codebase
 using Joakimsoftware.Core;
 using Joakimsoftware.IO;
-using Microsoft.SemanticKernel.Plugins.Core;
+
 
 namespace Joakimsoftware {
 
@@ -225,6 +228,29 @@ namespace Joakimsoftware {
             var ppm = await kernel.InvokeAsync(
                 "RunningPlugin", "CalculatePacePerMile", args);
             Console.WriteLine("ppm: " + ppm);
+            
+
+            // https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/liquid-prompt-templates
+            var jokesPluginDir = Path.Combine(
+                System.IO.Directory.GetCurrentDirectory(), "..", "plugins", "jokes");
+            kernel.ImportPluginFromPromptDirectory(jokesPluginDir);
+            Console.WriteLine("jokes plugin added");
+            
+            ResourceUtil resourceUtil = new ResourceUtil();
+            resourceUtil.DisplayResourceNames();
+            string jokeYaml = resourceUtil.ReadResource("joke.yaml");
+            Console.WriteLine(jokeYaml);
+            
+            args = new KernelArguments();
+            args.Add("topic", "Tell me a joke about North Carolina");
+            
+            // https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/handlebars-prompt-templates
+            // Create the prompt function from the YAML resource
+            var templateFactory = new HandlebarsPromptTemplateFactory();
+            var function = kernel.CreateFunctionFromPromptYaml(jokeYaml, templateFactory);
+
+            var response = await kernel.InvokeAsync(function, args);
+            Console.WriteLine(response);
             
             return resultText;
         }

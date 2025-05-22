@@ -44,8 +44,15 @@ dotnet add package Azure.Storage.Blobs
 dotnet add package Newtonsoft.Json
 dotnet add package DotNetEnv
 dotnet add package Microsoft.SemanticKernel.Plugins.Core --version 1.53.1-preview
+dotnet add package Microsoft.SemanticKernel.Planners 
+dotnet add package Microsoft.SemanticKernel.Planners.Handlebars;
+dotnet add package Microsoft.SemanticKernel.Planners.Liquid
+dotnet add package Microsoft.SemanticKernel.Planners.OpenAI
 dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
+dotnet add package Microsoft.SemanticKernel.PromptTemplates.Liquid
+dotnet add package Microsoft.SemanticKernel.Yaml --version 1.54.0
 dotnet add package Joakimsoftware.M26 --version 2.0.0
+
 
 $ dotnet list package
 Project 'dotnetx' has the following package references
@@ -55,9 +62,11 @@ Project 'dotnetx' has the following package references
    > DotNetEnv                                                3.1.1            3.1.1
    > Joakimsoftware.M26                                       2.0.0            2.0.0
    > Microsoft.Azure.Cosmos                                   3.51.0           3.51.0
-   > Microsoft.SemanticKernel                                 1.51.0           1.51.0
+   > Microsoft.SemanticKernel                                 1.54.0           1.54.0
    > Microsoft.SemanticKernel.Plugins.Core                    1.53.1-preview   1.53.1-preview
-   > Microsoft.SemanticKernel.PromptTemplates.Handlebars      1.53.1           1.53.1
+   > Microsoft.SemanticKernel.PromptTemplates.Handlebars      1.54.0           1.54.0
+   > Microsoft.SemanticKernel.PromptTemplates.Liquid          1.54.0           1.54.0
+   > Microsoft.SemanticKernel.Yaml                            1.54.0           1.54.0
    > Newtonsoft.Json                                          13.0.3           13.0.3
 
 $ dotnet build

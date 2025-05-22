@@ -12,14 +12,21 @@
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Joakimsoftware.M26" Version="2.0.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.51.0" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.51.0" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.54.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.53.1-preview" />
-    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.53.1" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.54.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Liquid" Version="1.54.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Yaml" Version="1.54.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="JoakimSoftware\SK\Plugins\" />
+  </ItemGroup>
+
+  <ItemGroup>  
+    <None Remove="Resources\joke.yaml" />  
+    <EmbeddedResource Include="Resources\joke.yaml" />  
   </ItemGroup>
 
 </Project>
