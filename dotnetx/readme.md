@@ -38,23 +38,27 @@ See script **setup.sh** which executes these steps.
 $ dotnet new console
 The template "Console App" was created successfully.
 
-$ dotnet add package Microsoft.SemanticKernel
-$ dotnet add package Microsoft.Azure.Cosmos
-$ dotnet add package Azure.Storage.Blobs
-$ dotnet add package Newtonsoft.Json
-$ dotnet add package DotNetEnv
-$ dotnet add package Microsoft.SemanticKernel.Plugins.Core --version 1.53.1-preview
+dotnet add package Microsoft.SemanticKernel
+dotnet add package Microsoft.Azure.Cosmos
+dotnet add package Azure.Storage.Blobs
+dotnet add package Newtonsoft.Json
+dotnet add package DotNetEnv
+dotnet add package Microsoft.SemanticKernel.Plugins.Core --version 1.53.1-preview
+dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
+dotnet add package Joakimsoftware.M26 --version 2.0.0
 
 $ dotnet list package
 Project 'dotnetx' has the following package references
    [net9.0]:
-   Top-level Package                            Requested        Resolved
-   > Azure.Storage.Blobs                        12.24.0          12.24.0
-   > DotNetEnv                                  3.1.1            3.1.1
-   > Microsoft.Azure.Cosmos                     3.51.0           3.51.0
-   > Microsoft.SemanticKernel                   1.51.0           1.51.0
-   > Microsoft.SemanticKernel.Plugins.Core      1.53.1-preview   1.53.1-preview
-   > Newtonsoft.Json                            13.0.3           13.0.3
+   Top-level Package                                          Requested        Resolved
+   > Azure.Storage.Blobs                                      12.24.0          12.24.0
+   > DotNetEnv                                                3.1.1            3.1.1
+   > Joakimsoftware.M26                                       2.0.0            2.0.0
+   > Microsoft.Azure.Cosmos                                   3.51.0           3.51.0
+   > Microsoft.SemanticKernel                                 1.51.0           1.51.0
+   > Microsoft.SemanticKernel.Plugins.Core                    1.53.1-preview   1.53.1-preview
+   > Microsoft.SemanticKernel.PromptTemplates.Handlebars      1.53.1           1.53.1
+   > Newtonsoft.Json                                          13.0.3           13.0.3
 
 $ dotnet build
 

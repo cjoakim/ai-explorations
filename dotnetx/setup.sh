@@ -13,5 +13,7 @@ dotnet add package Azure.Storage.Blobs
 dotnet add package Newtonsoft.Json
 dotnet add package DotNetEnv
 dotnet add package Microsoft.SemanticKernel.Plugins.Core --version 1.53.1-preview
+dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
+dotnet add package Joakimsoftware.M26 --version 2.0.0
 
 dotnet list package

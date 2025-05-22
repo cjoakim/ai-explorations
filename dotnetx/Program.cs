@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.SemanticKernel;
 
 using DotNetEnv;
+using Joakimsoftware.M26;
 
 using JoakimSoftware;
 //using JoakimSoftware.Core;
@@ -30,6 +31,9 @@ namespace JoakimSoftware {
                     break;
                 case "paths":
                     PathsExamples();
+                    break;
+                case "m26":
+                    M26Examples();
                     break;
                 case "sk_simple_prompt":
                     await SKSimplePrompt();
@@ -80,6 +84,62 @@ namespace JoakimSoftware {
             Log("norm: " + Paths.Normalize(@"\Users\chris\github\cj-dotnet\Console1\Console1"));
             Log("norm: " + Paths.Normalize(@"/Users/chris/github/cj-dotnet/Console1/Console1"));
             Log("norm: " + Paths.Normalize(@"Program.cs"));
+        }
+
+        private static void M26Examples()
+        {
+            // See https://www.nuget.org/packages/Joakimsoftware.M26
+            // This method explores the Joakimsoftware.M26 package before 
+            // implementing its' functionality in a Semantic Kernel plugin.
+            
+            Distance d = new Distance(26.2);
+            double m = d.asMiles();
+            double k = d.asKilometers();
+            double y = d.asYards();
+            Console.WriteLine($"Distance - miles:        {m}");
+            Console.WriteLine($"Distance - kilometers:   {k}");
+            Console.WriteLine($"Distance - yards:        {y}");
+          
+            ElapsedTime et1 = new ElapsedTime("3:47:30");
+            ElapsedTime et2 = new ElapsedTime(3, 47, 30);
+            ElapsedTime et3 = new ElapsedTime(13650.0);
+            Console.WriteLine($"ElapsedTime - et1 hhmmss: {et1.asHHMMSS()}");
+            Console.WriteLine($"ElapsedTime - et2 hhmmss: {et2.asHHMMSS()}");
+            Console.WriteLine($"ElapsedTime - et3 hhmmss: {et3.asHHMMSS()}");
+            
+            // Construct a Speed from a Distance and ElapsedTime
+            Speed sp = new Speed(d, et1);
+            double mph = sp.mph();
+            double kph = sp.kph();
+            double yph = sp.yph();
+            double spm = sp.secondsPerMile();
+            string ppm = sp.pacePerMile();
+            Console.WriteLine($"Speed - mph:             {mph}");
+            Console.WriteLine($"Speed - kph:             {kph}");
+            Console.WriteLine($"Speed - yph:             {yph}");
+            Console.WriteLine($"Speed - secondsPerMile:  {spm}");
+            Console.WriteLine($"Speed - pacePerMile:     {ppm}");
+            
+            // Project the Speed to another Distance, simple formula
+            ElapsedTime etp1 = sp.projectedTime(new Distance(31.0));
+            Console.WriteLine($"Speed projected to 31m:  {etp1.asHHMMSS()}");
+
+            // Project the Speed to another Distance, riegel exponential formula
+            ElapsedTime etp2 = sp.projectedTime(new Distance(31.0), Constants.SpeedFormulaRiegel);
+            Console.WriteLine($"Speed projected to 31m:  {etp2.asHHMMSS()}");
+
+            Age a1 = new Age(42.4);
+            Age a2 = new Age(67.5);
+
+            Speed agsp = sp.ageGraded(a1, a2);
+            Console.WriteLine($"age-graded to 67.5:      {agsp.elapsedTime.asHHMMSS()}");
+
+            RunWalkCalculator rwc = new RunWalkCalculator();
+            // method signature: calculate(runHHMMSS, runPPM, walkHHMMSS, walkPPM, miles)
+            // returns a RunWalkCalculation struct
+            RunWalkCalculation calc = rwc.calculate("4:30", "9:30", "00:30", "17:00", 26.2);
+            Console.WriteLine($"RunWalkCalc - mph:       {calc.averageSpeed.mph()}");
+            Console.WriteLine($"RunWalkCalc - proj time: {calc.projectedTime}");
         }
 
 
@@ -145,10 +205,15 @@ namespace JoakimSoftware {
             Console.WriteLine("kernel: " + kernel);
             
             // See docs at https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.plugins.core.timeplugin
+            var date = await kernel.InvokeAsync("TimePlugin", "Date");
+            Console.WriteLine("date: " + date);
             var today = await kernel.InvokeAsync("TimePlugin", "DayOfWeek");
             Console.WriteLine("today: " + today);
-            
-
+            var tz = await kernel.InvokeAsync("TimePlugin", "TimeZoneName");
+            Console.WriteLine("tz: " + tz);      
+            //date: Thursday, 22 May 2025
+            //today: Thursday
+            //tz: (UTC-05:00) Eastern Time (New York)
 
             return resultText;
         }
