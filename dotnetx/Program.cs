@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using Microsoft.SemanticKernel;
 
 using DotNetEnv;
-using Joakimsoftware.M26;
+using Joakimsoftware.M26;         // This is a NuGet Package
+using Joakimsoftware.Plugins;  // This is in this codebase
 
-using JoakimSoftware;
-//using JoakimSoftware.Core;
-using JoakimSoftware.IO;
+using Joakimsoftware.Core;
+using Joakimsoftware.IO;
 using Microsoft.SemanticKernel.Plugins.Core;
 
-namespace JoakimSoftware {
+namespace Joakimsoftware {
 
     class Program {
         
@@ -20,7 +20,7 @@ namespace JoakimSoftware {
 
             string func = GetRunFunction(args);
             Log("run function: " + func);
-            Env.Load();
+            DotNetEnv.Env.Load();
 
             switch (func) {
                 case "env":
@@ -50,13 +50,13 @@ namespace JoakimSoftware {
 
         private static void EnvExamples() {
 
-            Console.WriteLine("pwd:        " + JoakimSoftware.Core.Env.Pwd());
-            Console.WriteLine("home:       " + JoakimSoftware.Core.Env.HomeDir());
-            Console.WriteLine("os arch:    " + JoakimSoftware.Core.Env.OsArch());
-            Console.WriteLine("os desc:    " + JoakimSoftware.Core.Env.OsDesc());
-            Console.WriteLine("is windows: " + JoakimSoftware.Core.Env.IsWindows());
-            Console.WriteLine("is macos:   " + JoakimSoftware.Core.Env.IsMacOS());
-            Console.WriteLine("is linux:   " + JoakimSoftware.Core.Env.IsLinux());
+            Console.WriteLine("pwd:        " + Core.Env.Pwd());
+            Console.WriteLine("home:       " + Core.Env.HomeDir());
+            Console.WriteLine("os arch:    " + Core.Env.OsArch());
+            Console.WriteLine("os desc:    " + Core.Env.OsDesc());
+            Console.WriteLine("is windows: " + Core.Env.IsWindows());
+            Console.WriteLine("is macos:   " + Core.Env.IsMacOS());
+            Console.WriteLine("is linux:   " + Core.Env.IsLinux());
         }
 
         private static void IoExamples() {
@@ -198,12 +198,14 @@ namespace JoakimSoftware {
                 apiKey: apiKey,
                 endpoint: apiUrl
             );
-            builder.Plugins.AddFromType<TimePlugin>();
+            builder.Plugins.AddFromType<TimePlugin>();     // TimePlugin is a SK built-in plugin
+            builder.Plugins.AddFromType<RunningPlugin>();  // RunningPlugin is a custom native plugin
             Console.WriteLine("builder: " + builder);
             
             Kernel kernel = builder.Build();
             Console.WriteLine("kernel: " + kernel);
             
+            // Invoke the built-in TimePlugin - several methods
             // See docs at https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel.plugins.core.timeplugin
             var date = await kernel.InvokeAsync("TimePlugin", "Date");
             Console.WriteLine("date: " + date);
@@ -211,10 +213,19 @@ namespace JoakimSoftware {
             Console.WriteLine("today: " + today);
             var tz = await kernel.InvokeAsync("TimePlugin", "TimeZoneName");
             Console.WriteLine("tz: " + tz);      
-            //date: Thursday, 22 May 2025
-            //today: Thursday
-            //tz: (UTC-05:00) Eastern Time (New York)
 
+            // Invoke the custom native RunningPlugin - several methods
+            var dist = await kernel.InvokeAsync(
+                "RunningPlugin", "MarathonDistance", new KernelArguments());
+            Console.WriteLine("marathon distance: " + dist);
+            
+            var args = new KernelArguments();
+            args.Add("distance", "26.2");
+            args.Add("hhmmss", "3:47:30");
+            var ppm = await kernel.InvokeAsync(
+                "RunningPlugin", "CalculatePacePerMile", args);
+            Console.WriteLine("ppm: " + ppm);
+            
             return resultText;
         }
 
@@ -235,7 +246,7 @@ namespace JoakimSoftware {
         
         private static string ReadEnvVar(string name, string defaultValue) {
 
-            return JoakimSoftware.Core.Env.EnvVar(name, defaultValue);
+            return Core.Env.EnvVar(name, defaultValue);
         }
 
         private static string PromptUser(string message) {

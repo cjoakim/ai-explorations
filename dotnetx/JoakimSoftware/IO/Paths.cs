@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using JoakimSoftware.Core;
+using Joakimsoftware.Core;
 
-namespace JoakimSoftware.IO {
+namespace Joakimsoftware.IO {
 
     public class Paths {
 
