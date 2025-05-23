@@ -34,9 +34,9 @@ Projects and files in this repo:
 - [Semantic Kernel Overview](https://learn.microsoft.com/en-us/semantic-kernel/overview/)
 - [Semantic Kernel Quick Start](https://learn.microsoft.com/en-us/semantic-kernel/get-started/quick-start-guide?pivots=programming-language-python)
 - [semantic-kernel @ PyPi](https://pypi.org/project/semantic-kernel/)
-- [semantic-kernel @ GitHub](https://github.com/microsoft/semantic-kernel/tree/main/python)
-- [semantic-kernel Samples @ GitHub](https://github.com/microsoft/semantic-kernel/tree/main/python/samples)
-- [semantic_kernel SDK Docs](https://learn.microsoft.com/en-us/python/api/semantic-kernel/semantic_kernel?view=semantic-kernel-python)
+- [semantic-kernel @ NuGet](https://www.nuget.org/packages/Microsoft.SemanticKernel)
+- [semantic-kernel @ GitHub](https://github.com/microsoft/semantic-kernel)
+- [semantic_kernel Python SDK Docs](https://learn.microsoft.com/en-us/python/api/semantic-kernel/semantic_kernel?view=semantic-kernel-python)
 
 ---
 
@@ -70,6 +70,7 @@ Projects and files in this repo:
 - https://huggingface.co/blog/lynn-mikami/fastapi-mcp-server
 - https://medium.com/@ruchi.awasthi63/integrating-mcp-servers-with-fastapi-2c6d0c9a4749
 - [Hugging Face Course](https://huggingface.co/mcp-course)
+- [Udemy MCP Course Repo](https://github.com/nordquant/mcp-course)
 
 ---
 
@@ -88,6 +89,7 @@ Projects and files in this repo:
 - https://microsoft.github.io/autogen/stable/index.html
 - https://devblogs.microsoft.com/autogen/microsofts-agentic-frameworks-autogen-and-semantic-kernel/
 - https://devblogs.microsoft.com/autogen/
+- https://github.com/microsoft/autogen
 
 ---
 
@@ -107,6 +109,7 @@ Projects and files in this repo:
 
 ### Other
 
+- https://github.com/microsoft/OpenAIWorkshop
 - https://learn.microsoft.com/en-us/dotnet/orleans/overview
 
 ---
@@ -117,6 +120,7 @@ Projects and files in this repo:
 - [CosmosAIGraph Repo](https://github.com/AzureCosmosDB/CosmosAIGraph)
 - [CosmosAIGraph YouTube](https://www.youtube.com/watch?v=0alvRmEgIpQ)
 - [AIGraph4pg Repo](https://github.com/cjoakim/AIGraph4pg)
+- https://github.com/microsoft/vscode-cosmosdb
 
 ---
 
