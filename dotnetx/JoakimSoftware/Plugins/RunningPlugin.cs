@@ -21,6 +21,7 @@ public class RunningPlugin
     {
         try
         {
+            Console.WriteLine($"RunningPlugin.MarathonDistance");
             await Task.Delay(0);  // Simulate async work
             return 26.2;
         }

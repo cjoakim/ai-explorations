@@ -16,6 +16,7 @@ using Joakimsoftware.Plugins;  // These three are in this codebase
 using Joakimsoftware.Core;
 using Joakimsoftware.IO;
 using Joakimsoftware.SK;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 
 namespace Joakimsoftware {
@@ -280,8 +281,25 @@ how long would it take to run {{ RunningPlugin.MarathonDistance }} miles?
 Let's think step by step.
 
 Calculate the elapsed time in HH:MM:SS format.".Trim();
-            response = await kernel.InvokePromptAsync(prompt, args); 
+            response = await kernel.InvokePromptAsync(prompt, args);             Console.WriteLine("========== \nYAML Function example");
             Console.WriteLine(response);
+           
+            Console.WriteLine("========== \nAutomatic plugin invocation");
+            OpenAIPromptExecutionSettings executionSettings = new OpenAIPromptExecutionSettings();
+            executionSettings.ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions;
+            prompt = @"
+Answer three questions:
+First, tell me something funny on the topic of Connecticut.
+
+Next, how many miles are in a marathon?
+
+Next, if I run 3.1 miles in 26:12, what is my pace per mile?
+
+Let's think step by step.
+";
+            response = await kernel.InvokePromptAsync(prompt, new(executionSettings));
+            Console.WriteLine(response);
+            
             
             return resultText;
         }
