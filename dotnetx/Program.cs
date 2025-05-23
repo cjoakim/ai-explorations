@@ -3,16 +3,19 @@ using System.IO;
 using System.Collections.Generic;
 using System.Resources;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 
 using DotNetEnv;
+using Fluid;
 using Fluid.Ast;
 using Joakimsoftware.M26;      // This is a NuGet Package
 using Joakimsoftware.Plugins;  // These three are in this codebase
 using Joakimsoftware.Core;
 using Joakimsoftware.IO;
+using Joakimsoftware.SK;
 
 
 namespace Joakimsoftware {
@@ -143,6 +146,7 @@ namespace Joakimsoftware {
             RunWalkCalculation calc = rwc.calculate("4:30", "9:30", "00:30", "17:00", 26.2);
             Console.WriteLine($"RunWalkCalc - mph:       {calc.averageSpeed.mph()}");
             Console.WriteLine($"RunWalkCalc - proj time: {calc.projectedTime}");
+            
         }
 
 
@@ -203,6 +207,7 @@ namespace Joakimsoftware {
             );
             builder.Plugins.AddFromType<TimePlugin>();     // TimePlugin is a SK built-in plugin
             builder.Plugins.AddFromType<RunningPlugin>();  // RunningPlugin is a custom native plugin
+            builder.Services.AddSingleton<IPromptRenderFilter, PromptLogger>();
             Console.WriteLine("builder: " + builder);
             
             Kernel kernel = builder.Build();
@@ -229,7 +234,6 @@ namespace Joakimsoftware {
                 "RunningPlugin", "CalculatePacePerMile", args);
             Console.WriteLine("ppm: " + ppm);
             
-
             // https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/liquid-prompt-templates
             var jokesPluginDir = Path.Combine(
                 System.IO.Directory.GetCurrentDirectory(), "..", "plugins", "jokes");
@@ -250,6 +254,28 @@ namespace Joakimsoftware {
             var function = kernel.CreateFunctionFromPromptYaml(jokeYaml, templateFactory);
 
             var response = await kernel.InvokeAsync(function, args);
+            Console.WriteLine(response);
+            
+            // Inline invocation of the MarathonDistance method of the RunningPlugin plugin.
+            string prompt = @"
+Convert the following distance in miles to kilometers: 
+{{ RunningPlugin.MarathonDistance }} miles and also to yards.".Trim();
+            response = await kernel.InvokePromptAsync(prompt);
+            Console.WriteLine(response);
+
+            // Passing multiple args to a plugin in a prommpt is harder, use KernelArguments.
+            // Chain-of-thought "Let's think step by step." made this prompt accurate!
+            args = new KernelArguments();
+            args.Add("d", "10.0");
+            args.Add("t", "1:30:00");
+            prompt = @"
+Given a pace per mile of {{RunningPlugin.CalculatePacePerMile $d hhmmss=$t }},
+how long would it take to run {{ RunningPlugin.MarathonDistance }} miles?
+
+Let's think step by step.
+
+Calculate the elapsed time in HH:MM:SS format.".Trim();
+            response = await kernel.InvokePromptAsync(prompt, args); 
             Console.WriteLine(response);
             
             return resultText;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins;
 
-using Joakimsoftware.M26;
+using M26;
 
 /**
  * This is a custom native SK Plugin that performs running calculations
@@ -33,11 +33,13 @@ public class RunningPlugin
     
     [KernelFunction("CalculatePacePerMile")]
     [Description("Calculate a running pace per mile given a distance and time")]
-    public async Task<string> CalculatePacePerMile(string distance, string hhmmss)
+    public async Task<string> CalculatePacePerMile(
+        [Description("Distance as a float")] string distance, 
+        [Description("Elapsed time in HH:MM:SS format")] string hhmmss)
     {
         try
         {
-            // Console.WriteLine($"RunningPlugin.CalculatePacePerMile - distance: {distance}, hhmmss: {hhmmss} ");
+            Console.WriteLine($"RunningPlugin.CalculatePacePerMile - distance: {distance}, hhmmss: {hhmmss} ");
             await Task.Delay(0);  // Simulate async work
             Distance d = new Distance(Convert.ToDouble(distance));
             ElapsedTime et = new ElapsedTime(hhmmss);
