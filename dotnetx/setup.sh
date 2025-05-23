@@ -20,6 +20,7 @@ dotnet add package Microsoft.SemanticKernel.Planners.OpenAI
 dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
 dotnet add package Microsoft.SemanticKernel.PromptTemplates.Liquid
 dotnet add package Microsoft.SemanticKernel.Yaml --version 1.54.0
+dotnet add package Azure.Monitor.OpenTelemetry.Exporter
 dotnet add package Joakimsoftware.M26 --version 2.0.0
 
 dotnet list package

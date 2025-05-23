@@ -3,10 +3,19 @@ using System.IO;
 using System.Collections.Generic;
 using System.Resources;
 
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
+
+using Microsoft.Extensions.Logging;
+
+using OpenTelemetry;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 using DotNetEnv;
 using Fluid;
@@ -191,14 +200,51 @@ namespace Joakimsoftware {
             string apiUrl = ReadEnvVar("AZURE_OPENAI_URL", "none");
             string apiKey = ReadEnvVar("AZURE_OPENAI_KEY", "none");
             string depName = ReadEnvVar("AZURE_OPENAI_COMPLETIONS_DEPLOYMENT", "gpt-3.5-turbo");
+            string appInsightsConnStr = ReadEnvVar("APP_INSIGHTS_CONNECTION_STRING", "none");
             string cat = ReadEnvVar("CAT", "Betty");
             string resultText = "none";
-            Console.WriteLine("apiUrl:  " + apiUrl);
-            Console.WriteLine("apiKey:  " + apiKey);
-            Console.WriteLine("depName: " + depName);
-            Console.WriteLine("cat:     " + cat);
+            Console.WriteLine("apiUrl:             " + apiUrl);
+            Console.WriteLine("apiKey:             " + apiKey);
+            Console.WriteLine("depName:            " + depName);
+            Console.WriteLine("appInsightsConnStr: " + appInsightsConnStr);
+            Console.WriteLine("cat:                " + cat);
+            
+            // Configure App Insights Telemetry
+            // See https://learn.microsoft.com/en-us/semantic-kernel/concepts/enterprise-readiness/observability/telemetry-with-app-insights?tabs=Powershell&pivots=programming-language-csharp
+            var resourceBuilder = ResourceBuilder
+                .CreateDefault()
+                .AddService("SKTelemetryApp");
+            AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
+
+            using var traceProvider = Sdk.CreateTracerProviderBuilder()
+                .SetResourceBuilder(resourceBuilder)
+                .AddSource("Microsoft.SemanticKernel*")
+                .AddAzureMonitorTraceExporter(options => options.ConnectionString = appInsightsConnStr)
+                .Build();
+            
+            using var meterProvider = Sdk.CreateMeterProviderBuilder()
+                .SetResourceBuilder(resourceBuilder)
+                .AddMeter("Microsoft.SemanticKernel*")
+                .AddAzureMonitorMetricExporter(options => options.ConnectionString = appInsightsConnStr)
+                .Build();
+            
+            using var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                // Add OpenTelemetry as a logging provider
+                builder.AddOpenTelemetry(options =>
+                {
+                    options.SetResourceBuilder(resourceBuilder);
+                    options.AddAzureMonitorLogExporter(options => options.ConnectionString = appInsightsConnStr);
+                    // Format log messages. This is default to false.
+                    options.IncludeFormattedMessage = true;
+                    options.IncludeScopes = true;
+                });
+                builder.SetMinimumLevel(LogLevel.Information);
+            });
             
             IKernelBuilder builder = Kernel.CreateBuilder();
+            builder.Services.AddSingleton(loggerFactory);
+            
             builder.AddAzureOpenAIChatCompletion(
                 deploymentName: depName,
                 apiKey: apiKey,

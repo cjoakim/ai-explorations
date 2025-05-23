@@ -51,13 +51,14 @@ dotnet add package Microsoft.SemanticKernel.Planners.OpenAI
 dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
 dotnet add package Microsoft.SemanticKernel.PromptTemplates.Liquid
 dotnet add package Microsoft.SemanticKernel.Yaml --version 1.54.0
+dotnet add package Azure.Monitor.OpenTelemetry.Exporter
 dotnet add package Joakimsoftware.M26 --version 2.0.0
-
 
 $ dotnet list package
 Project 'dotnetx' has the following package references
    [net9.0]:
    Top-level Package                                          Requested        Resolved
+   > Azure.Monitor.OpenTelemetry.Exporter                     1.4.0            1.4.0
    > Azure.Storage.Blobs                                      12.24.0          12.24.0
    > DotNetEnv                                                3.1.1            3.1.1
    > Joakimsoftware.M26                                       2.0.0            2.0.0
