@@ -284,7 +284,7 @@ Calculate the elapsed time in HH:MM:SS format.".Trim();
             response = await kernel.InvokePromptAsync(prompt, args);             Console.WriteLine("========== \nYAML Function example");
             Console.WriteLine(response);
            
-            Console.WriteLine("========== \nAutomatic plugin invocation");
+            Console.WriteLine("========== \nAutomatic/agentic Function Calling");
             OpenAIPromptExecutionSettings executionSettings = new OpenAIPromptExecutionSettings();
             executionSettings.ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions;
             prompt = @"
