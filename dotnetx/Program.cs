@@ -146,10 +146,8 @@ namespace Joakimsoftware {
             RunWalkCalculation calc = rwc.calculate("4:30", "9:30", "00:30", "17:00", 26.2);
             Console.WriteLine($"RunWalkCalc - mph:       {calc.averageSpeed.mph()}");
             Console.WriteLine($"RunWalkCalc - proj time: {calc.projectedTime}");
-            
         }
-
-
+        
         private static async Task<string> SKSimplePrompt()
         {
             string apiUrl = ReadEnvVar("AZURE_OPENAI_URL", "none");
@@ -234,40 +232,47 @@ namespace Joakimsoftware {
                 "RunningPlugin", "CalculatePacePerMile", args);
             Console.WriteLine("ppm: " + ppm);
             
-            // https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/liquid-prompt-templates
+            // Adding a conventional Plugin from a directory with a config.json and skprompt.txt
             var jokesPluginDir = Path.Combine(
                 System.IO.Directory.GetCurrentDirectory(), "..", "plugins", "jokes");
             kernel.ImportPluginFromPromptDirectory(jokesPluginDir);
             Console.WriteLine("jokes plugin added");
             
+            Console.WriteLine("========== \nYAML Function example");
             ResourceUtil resourceUtil = new ResourceUtil();
             resourceUtil.DisplayResourceNames();
             string jokeYaml = resourceUtil.ReadResource("joke.yaml");
             Console.WriteLine(jokeYaml);
-            
             args = new KernelArguments();
             args.Add("topic", "Tell me a joke about North Carolina");
-            
             // https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/handlebars-prompt-templates
-            // Create the prompt function from the YAML resource
             var templateFactory = new HandlebarsPromptTemplateFactory();
             var function = kernel.CreateFunctionFromPromptYaml(jokeYaml, templateFactory);
-
             var response = await kernel.InvokeAsync(function, args);
             Console.WriteLine(response);
             
-            // Inline invocation of the MarathonDistance method of the RunningPlugin plugin.
+            Console.WriteLine("========== \nInvoke the custom native RunningPlugin explicitly with code and KernelArguments");
+            response = await kernel.InvokeAsync("RunningPlugin", "MarathonDistance");
+            Console.WriteLine($@"RunningPlugin:MarathonDistance -> {response}");
+            args = new KernelArguments();
+            args.Add("distance", "10.0");
+            args.Add("hhmmss", "1:27:13");
+            response = await kernel.InvokeAsync("RunningPlugin", "CalculatePacePerMile", args);
+            Console.WriteLine($@"RunningPlugin:CalculatePacePerMile -> {response}");
+            
+            Console.WriteLine("========== \nInline invocation of the MarathonDistance method of the RunningPlugin plugin in a Prompt");
             string prompt = @"
 Convert the following distance in miles to kilometers: 
 {{ RunningPlugin.MarathonDistance }} miles and also to yards.".Trim();
             response = await kernel.InvokePromptAsync(prompt);
             Console.WriteLine(response);
-
-            // Passing multiple args to a plugin in a prommpt is harder, use KernelArguments.
-            // Chain-of-thought "Let's think step by step." made this prompt accurate!
+            
+            Console.WriteLine("========== \nPassing multiple args to a Plugin in a Prompt");
+            // Passing multiple args to a Plugin in a Prompt syntax is harder; use KernelArguments.
+            // The Chain-of-thought "Let's think step by step." made this prompt accurate!
             args = new KernelArguments();
-            args.Add("d", "10.0");
-            args.Add("t", "1:30:00");
+            args.Add("d", "1.0");
+            args.Add("t", "9:00");
             prompt = @"
 Given a pace per mile of {{RunningPlugin.CalculatePacePerMile $d hhmmss=$t }},
 how long would it take to run {{ RunningPlugin.MarathonDistance }} miles?
@@ -308,4 +313,3 @@ Calculate the elapsed time in HH:MM:SS format.".Trim();
         }
     }
 }
-
