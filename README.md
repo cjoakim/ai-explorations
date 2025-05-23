@@ -114,6 +114,16 @@ Projects and files in this repo:
 
 ---
 
+### HuggingFace Datasets 
+
+- https://huggingface.co/datasets
+- https://huggingface.co/docs/hub/en/datasets-downloading
+- https://huggingface.co/docs/datasets/v1.5.0/processing.html
+- https://huggingface.co/datasets/KingfernJohn/kfj-pypi-packages-metadata
+  - The dataset contains metadata of 161,346 packages, with a total size of 743MB (.zip 304MB).
+
+---
+
 ### CosmosAIGraph and AIGraph4pg 
 
 - [CosmosAIGraph Blog](https://learn.microsoft.com/en-us/azure/cosmos-db/gen-ai/cosmos-ai-graph)
